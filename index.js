@@ -11,7 +11,7 @@ studentsController.setup(app, students);
 
 let port = process.argv[2];
 if (!port) port = process.env["PORT"];
-if (!port) port = 8082;
+if (!port) port = 1010;
 
 app
   .listen(port, () => {
