@@ -1,17 +1,23 @@
 pipeline {
     agent any
 
+    environment {
+        APP_CONTAINER = "student-reg-cd-app-1"
+        IMAGE_NAME = "pepak/students:latest"
+        COMPOSE_FILE = "docker-compose.yml"
+    }
+
     stages {
-        stage('Checking out the code') {
+        stage('Install dependencies') {
             steps {
                 echo "Installing dependencies..."
                 sh 'npm install'
             }
         }
 
-        stage('Run integration tests') {
+        stage('Run tests') {
             steps {
-                echo "Running integration tests..."
+                echo "Running tests..."
                 sh 'npm run test'
             }
         }
@@ -22,6 +28,23 @@ pipeline {
                     input message: "Deploy to Production?", ok: "Deploy"
                 }
             }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo "Stopping old container if exists..."
+                sh "docker stop $APP_CONTAINER || true"
+                sh "docker rm $APP_CONTAINER || true"
+
+                echo "Deploying new container..."
+                sh "docker-compose -f $COMPOSE_FILE up -d"
+            }
+        }
+    }
+
+    post {
+        always {
+            echo "Pipeline finished."
         }
     }
 }
