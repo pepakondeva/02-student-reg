@@ -4,14 +4,17 @@ pipeline {
     stages {
         stage('Checking out the code') {
             steps {
+                echo "Installing dependencies..."
                 sh 'npm install'
             }
         }
 
         stage('Run integration tests') {
             steps {
+                echo "Running integration tests..."
                 sh 'npm run test'
             }
+        }
 
         stage('Manual Approval') {
             steps {
@@ -21,9 +24,4 @@ pipeline {
             }
         }
     }
-
-    }
-    }
-
-
-
+}
