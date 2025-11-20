@@ -12,6 +12,14 @@ pipeline {
             steps {
                 sh 'npm run test'
             }
+
+        stage('Manual Approval') {
+            steps {
+                script {
+                    input message: "Deploy to Production?", ok: "Deploy"
+                }
+            }
+        }
     }
 
     }
